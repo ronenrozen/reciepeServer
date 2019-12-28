@@ -17,14 +17,9 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	private String collection;
 	
 	@Autowired
-	public RecipeFirebaseCrud(Firestore firestore) {
+	public RecipeFirebaseCrud(Firestore firestore,
+			@Value("${recipeapp.firestore.collection.recipes:recipes}") String collection) {
 		this.firestore = firestore;
-	}
-	
-	@Override
-	@PostConstruct
-	@Value("${recipeapp.firestore.collection.recipes:recipes}")
-	public void initCollection(String collection) {
 		this.collection = collection;
 	}
 

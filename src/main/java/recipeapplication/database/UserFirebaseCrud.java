@@ -17,16 +17,12 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 	private String collection;
 	
 	@Autowired
-	UserFirebaseCrud(Firestore firestore) {
+	UserFirebaseCrud(Firestore firestore, 
+			@Value("${recipeapp.firestore.collection.users:users}") String collection) {
 		this.firestore = firestore;
-	}
-	
-	@Override
-	@PostConstruct
-	@Value("${recipeapp.firestore.collection.users:users}")
-	public void initCollection(String collection) {
 		this.collection = collection;
 	}
+
 
 	@Override
 	public void create(User user) {
