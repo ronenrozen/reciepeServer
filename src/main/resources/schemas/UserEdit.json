@@ -1,0 +1,19 @@
+{
+    "type": "object",
+    "forbidden": [
+        "id",
+        "role",
+        "name"
+    ],
+    "required": [
+        "favoriteRecipes"
+    ],
+    "properties": {
+        "favoriteRecipes": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

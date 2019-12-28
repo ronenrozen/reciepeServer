@@ -1,0 +1,39 @@
+{
+	"type": "object",
+	"minProperties": "3",
+	"maxProperties": "3",
+	"required": [
+		"id",
+		"role",
+		"name"
+	],
+	"properties": {
+		"id": "string",
+		"role": {
+			"type": "enum",
+			"items": {
+				"oneOf": [
+					"admin",
+					"user"
+				]
+			}
+		},
+		"name": {
+			"type": "object",
+			"required": [
+				"first",
+				"last"
+			],
+			"properties": {
+				"first": "string",
+				"last": "string"
+			}
+		},
+		"favoriteRecipes": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	}
+}
