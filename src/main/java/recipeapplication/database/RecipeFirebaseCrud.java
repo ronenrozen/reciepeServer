@@ -1,34 +1,56 @@
 package recipeapplication.database;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.google.cloud.firestore.Firestore;
 
 import recipeapplication.components.Recipe;
 
 @Component
 public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 
+	private Firestore firestore;
+	private String collection;
+	
+	@Autowired
+	public RecipeFirebaseCrud(Firestore firestore) {
+		this.firestore = firestore;
+	}
+	
 	@Override
-	public void create(String collection, String document, Recipe data) {
+	@PostConstruct
+	@Value("${recipeapp.firestore.collection.recipes:recipes}")
+	public void initCollection(String collection) {
+		this.collection = collection;
+	}
+
+	@Override
+	public void create(Recipe data) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void read(String collection, String document) {
+	public void read(String document) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(String collection, String doucmnet, Recipe data) {
+	public void update(Recipe data) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void delete(String collection, String document) {
+	public void delete(String document) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

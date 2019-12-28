@@ -1,6 +1,9 @@
 package recipeapplication.database;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.firestore.Firestore;
@@ -11,32 +14,40 @@ import recipeapplication.components.User;
 public class UserFirebaseCrud implements FirebaseCrud<User> {
 	
 	private Firestore firestore;
+	private String collection;
 	
 	@Autowired
 	UserFirebaseCrud(Firestore firestore) {
 		this.firestore = firestore;
 	}
+	
+	@Override
+	@PostConstruct
+	@Value("${recipeapp.firestore.collection.users:users}")
+	public void initCollection(String collection) {
+		this.collection = collection;
+	}
 
 	@Override
-	public void create(String collection, String document, User data) {
-		this.firestore.collection(collection).document(document).set(data);
+	public void create(User user) {
+		this.firestore.collection(collection).document(user.getId()).set(user);
 		
 	}
 
 	@Override
-	public void read(String collection, String document) {
+	public void read(String document) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(String collection, String doucmnet, User data) {
+	public void update(User user) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void delete(String collection, String document) {
+	public void delete(String document) {
 		// TODO Auto-generated method stub
 		
 	}
