@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "ingridiance": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "preperation": "string",
+        "recipeImage": {
+            "type": "formData",
+            "mimeType": {
+                "oneOf": [
+                    "image/png",
+                    "image/jpg"
+                ]
+            }
+        }
+    }
+}
