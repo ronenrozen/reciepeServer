@@ -27,27 +27,27 @@ public class SwaggerConfig {
 		this.appName = appName;
 	}
 
-	@Value("${myservice.meta.description:unknown}")
+	@Value("${recipeapp.meta.description:unknown}")
 	public void setAppDescription(String appDescription) {
 		this.appDescription = appDescription;
 	}
 
-	@Value("${myservice.meta.version:unknown}")
+	@Value("${recipeapp.meta.version:unknown}")
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
-	@Value("${myservice.meta.contact.name:unknown}")
+	@Value("${recipeapp.meta.contact.name:unknown}")
 	public void setContactName(String contactName) {
 		this.contactName = contactName;
 	}
 
-	@Value("${myservice.meta.contact.email:unknown@mail.mail}")
+	@Value("${recipeapp.meta.contact.email:unknown@mail.mail}")
 	public void setContactEmail(String contactEmail) {
 		this.contactEmail = contactEmail;
 	}
 
-	@Value("${myservice.meta.contact.url:unknown}")
+	@Value("${recipeapp.meta.contact.url:unknown}")
 	public void setContactUrl(String contactUrl) {
 		this.contactUrl = contactUrl;
 	}
