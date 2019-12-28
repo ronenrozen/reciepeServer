@@ -3,7 +3,7 @@ package recipeapplication.database;
 
 public interface FirebaseCrud<T> {
 	void create(T data);
-	void read(String document);
-	void update(T data);
-	void delete(String document);
+	T read(String document);
+	T update(T data) throws Exception;
+	T delete(String document);
 }
