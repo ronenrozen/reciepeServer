@@ -29,9 +29,9 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 	}
 
 	@Override
-	public void read(String document) {
+	public User read(String document) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
