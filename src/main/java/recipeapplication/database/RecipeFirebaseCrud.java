@@ -1,13 +1,10 @@
 package recipeapplication.database;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.firestore.Firestore;
-
 import recipeapplication.components.Recipe;
 
 @Component
@@ -25,7 +22,8 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 
 	@Override
 	public void create(Recipe data) {
-		// TODO Auto-generated method stub
+		
+		this.firestore.collection(collection).document(data.getId()).set(data);
 		
 	}
 

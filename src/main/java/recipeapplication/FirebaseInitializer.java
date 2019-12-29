@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Configuration;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 
 @Configuration
 public class FirebaseInitializer {
@@ -18,17 +20,22 @@ public class FirebaseInitializer {
 	public Firestore initialize() {
 		try {
 			System.out.println("initialized");
-			FirebaseApp.initializeApp(
+			 FirebaseApp.initializeApp(
 					new FirebaseOptions
 					.Builder()
 					.setCredentials(GoogleCredentials.fromStream(new FileInputStream("src/main/resources/key.json")))
 					.setDatabaseUrl("https://reciappeagile.firebaseio.com")
+					.setStorageBucket("reciappeagile.appspot.com")
 					.build());
-
 			return FirestoreClient.getFirestore();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@Bean
+	public Bucket getDefaultBucket() {
+		return StorageClient.getInstance().bucket();
 	}
 }

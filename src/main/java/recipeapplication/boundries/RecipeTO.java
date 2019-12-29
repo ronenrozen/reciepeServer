@@ -1,13 +1,15 @@
-package recipeapplication.components;
+package recipeapplication.boundries;
 
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class Recipe {
+public class RecipeTO {
 
 	@NotNull
 	String id;
@@ -21,18 +23,16 @@ public class Recipe {
 	@NotNull
 	String preperation;
 
-	String recipeImageId; // TODO: figure out how to store images
-
-	public Recipe() {
+	public RecipeTO() {
 	}
 
-	public Recipe(String id, String category, List<String> ingridiant, String preperation, String recipeImageId) {
+	public RecipeTO(String id, String category, List<String> ingridiant, String preperation,
+			MultipartFile recipeImage) {
 		super();
 		this.id = id;
 		this.category = category;
 		this.ingridiant = ingridiant;
 		this.preperation = preperation;
-		this.recipeImageId = recipeImageId;
 	}
 
 	public String getId() {
@@ -65,13 +65,5 @@ public class Recipe {
 
 	public void setPreperation(String preperation) {
 		this.preperation = preperation;
-	}
-
-	public String getRecipeImageId() {
-		return recipeImageId;
-	}
-
-	public void setRecipeImageId(String recipeImageId) {
-		this.recipeImageId = recipeImageId;
 	}
 }
