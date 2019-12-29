@@ -1,4 +1,4 @@
-package TransferObjects;
+package recipeapplication.boundries;
 
 
 import javax.validation.constraints.NotNull;

@@ -2,8 +2,8 @@ package Utils;
 
 public class StringUtils {
 
-    public static boolean isNullOrEmptyTrimmed(String str) {
-        return (str == null || str.trim().isEmpty());
+    public static boolean isEmptyTrimmed(String str) {
+        return (str.trim().isEmpty());
     }
 
 
