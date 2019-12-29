@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public void test() {
+    public void test() throws Exception {
         User a = new User();
         a.setId("1");
         a.setName(new Name("Sagiv", "Asraf"));
@@ -45,21 +45,28 @@ public class UserController {
         users.addUser(c);
     }
 
-    @RequestMapping(value = "/addUser", method = RequestMethod.POST,
+    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public User readUser(@PathVariable @Valid String id) throws Exception {
+        return this.users.readUser(id);
+    }
+
+
+    @RequestMapping(value = "/user", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User addUser(@RequestBody @Valid User user) {
+    public User addUser(@RequestBody @Valid User user) throws Exception {
         return this.users.addUser(user);
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE,
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User deleteUser(@RequestBody @Valid String userId) {
-        return this.users.deleteUser(userId);
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public User deleteUser(@PathVariable @Valid String id) throws Exception {
+        return this.users.deleteUser(id);
     }
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User updateUser(@PathVariable String id,@RequestBody UserEditTO user) throws Exception {
+    public User updateUser(@PathVariable String id, @RequestBody UserEditTO user) throws Exception {
         User convertedUser = UserTOtoUserEntity(user, id);
         return this.users.updateUser(convertedUser);
     }

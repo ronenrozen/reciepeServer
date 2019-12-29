@@ -21,10 +21,10 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	}
 
 	@Override
-	public void create(Recipe data) {
-		
+	public Recipe create(Recipe data) {
+
 		this.firestore.collection(collection).document(data.getId()).set(data);
-		
+		return null;
 	}
 
 	@Override

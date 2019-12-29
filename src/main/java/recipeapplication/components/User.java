@@ -18,7 +18,6 @@ public class User {
     @NotNull
     private Name name;
 
-    @NotNull
     private ArrayList<String>  favoriteRecipes;
 
     public User() {
@@ -29,7 +28,7 @@ public class User {
     	this.id = id;
 	}
 
-    public User(@NotNull String id, @NotNull Role role, @NotNull Name name, @NotNull ArrayList<String>  favoriteRecipes) {
+    public User(@NotNull String id, @NotNull Role role, @NotNull Name name, ArrayList<String>  favoriteRecipes) {
         super();
         this.id = id;
         this.role = role;

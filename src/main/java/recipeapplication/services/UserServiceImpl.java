@@ -18,13 +18,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
-        this.users.create(user);
-        return user;
+    public User addUser(User user) throws Exception {
+        return this.users.create(user);
     }
 
     @Override
-    public User readUser(String id) {
+    public User readUser(String id) throws Exception {
         return this.users.read(id);
     }
 
@@ -34,9 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User deleteUser(String id) {
+    public User deleteUser(String id) throws Exception {
         return this.users.delete(id);
     }
-
 
 }
