@@ -3,6 +3,7 @@ package recipeapplication;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,16 +18,26 @@ import com.google.firebase.cloud.StorageClient;
 @Configuration
 public class FirebaseInitializer {
 	@Bean
-	public Firestore initialize() {
+	public Firestore initialize(
+			@Value("${recipeapp.firestore.service-account-file}") 
+			String serviceAccountKey,
+			
+			@Value("${recipeapp.firestore.database-url}") 
+			String databaseUrl,
+			
+			@Value("${recipeapp.firestore.storage-url}") 
+			String storageUrl
+			) {
 		try {
-			System.out.println("initialized");
+			
 			 FirebaseApp.initializeApp(
 					new FirebaseOptions
 					.Builder()
-					.setCredentials(GoogleCredentials.fromStream(new FileInputStream("src/main/resources/key.json")))
-					.setDatabaseUrl("https://reciappeagile.firebaseio.com")
-					.setStorageBucket("reciappeagile.appspot.com")
+					.setCredentials(GoogleCredentials.fromStream(new FileInputStream(serviceAccountKey)))
+					.setDatabaseUrl(databaseUrl)
+					.setStorageBucket(storageUrl)
 					.build());
+			 System.out.println("initialized");
 			return FirestoreClient.getFirestore();
 		} catch (IOException e) {
 			e.printStackTrace();
