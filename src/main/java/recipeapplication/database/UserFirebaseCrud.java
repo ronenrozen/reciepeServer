@@ -31,7 +31,7 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 
     @Override
     public User create(User user) {
-        if (isAllUserDetailsNotValid(user)) {
+        if (AnyUserDetailsAreNotValid(user)) {
             throw new BadRequestException(FinalsStringsExceptions.CREATE_BAD_REQUEST);
         }
         DocumentReference docRef = this.getDocRef(user.getId());
@@ -77,7 +77,7 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
         return mapper.convertValue(FirebaseUtils.getSnapshot(docRef).getData(), User.class);
     }
 
-    private boolean isAllUserDetailsNotValid(User user) {
+    private boolean AnyUserDetailsAreNotValid(User user) {
         return StringUtils.isEmptyTrimmed(user.getId()) ||
                 StringUtils.isEmptyTrimmed(user.getName().getFirst()) ||
                 StringUtils.isEmptyTrimmed(user.getName().getLast());
