@@ -1,16 +1,15 @@
 package recipeapplication.database;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import org.springframework.web.multipart.MultipartFile;
 import recipeapplication.components.Recipe;
 
-import javax.validation.Valid;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 @Component
@@ -18,16 +17,18 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 
 	private Firestore firestore;
 	private String collection;
+	private ObjectMapper mapper; // jackson's object mapper
 	
 	@Autowired
 	public RecipeFirebaseCrud(Firestore firestore,
 			@Value("${recipeapp.firestore.collection.recipes:recipes}") String collection) {
 		this.firestore = firestore;
 		this.collection = collection;
+		this.mapper = new ObjectMapper();
 	}
 
 	@Override
-	public void create(Recipe data) {
+	public Recipe create(Recipe data) {
 		System.out.println("In recipe creation section");
 		DocumentReference docRef = this.firestore.collection(collection).document(data.getId());
 		try {
@@ -38,6 +39,7 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
+		return data;
 	}
 
 	@Override
@@ -49,13 +51,7 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 				throw new RuntimeException("Failed to read, recipe doesn't exist!");
 			else {
 				Map<String, Object> data = docSnap.getData();
-
-				return new Recipe(
-						data.get("id").toString(),
-						data.get("category").toString(),
-						((List<String>) data.get("ingridiant")),
-						data.get("preperation").toString(),
-						data.get("recipeImageId") != null ? data.get("recipeImageId").toString() : null);
+				return mapper.convertValue(data, Recipe.class);
 			}
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
@@ -65,13 +61,13 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	}
 
 	@Override
-	public void update(Recipe data) {
+	public Recipe update(Recipe data) {
 		System.out.println("In recipe updating section");
 		DocumentReference docRef = this.firestore.collection(collection).document(data.getId());
 		try {
 			DocumentSnapshot docSnap = docRef.get().get();
 
-			if(docSnap.exists() && docSnap.get("id").toString().equalsIgnoreCase(data.getId())) {
+			if(docSnap.exists() && Objects.requireNonNull(docSnap.get("id")).toString().equalsIgnoreCase(data.getId())) {
 				docRef.set(data);
 			}
 			else
@@ -79,11 +75,18 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
+		return data;
 	}
 
 	@Override
 	public Recipe delete(String document) {
+
+
+
+		return read(document); // temporary
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
+
+
 }
