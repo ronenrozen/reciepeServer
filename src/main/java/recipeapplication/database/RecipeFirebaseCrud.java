@@ -21,28 +21,29 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	}
 
 	@Override
-	public void create(Recipe data) {
-		
+	public Recipe create(Recipe data) {
+
 		this.firestore.collection(collection).document(data.getId()).set(data);
-		
+		return null;
 	}
 
 	@Override
-	public void read(String document) {
+	public Recipe read(String document) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void update(Recipe data) {
+	public Recipe update(Recipe data) {
 		// TODO Auto-generated method stub
-		
+		return null;
+
 	}
 
 	@Override
-	public void delete(String document) {
+	public Recipe delete(String document) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 
