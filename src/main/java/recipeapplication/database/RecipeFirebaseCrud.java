@@ -80,11 +80,22 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 
 	@Override
 	public Recipe delete(String document) {
+		System.out.println("In recipe deleting section");
+		DocumentReference docRef = this.firestore.collection(collection).document(document);
+		try {
+			DocumentSnapshot docSnap = docRef.get().get();
 
+			if(docSnap.exists() && Objects.requireNonNull(docSnap.get("id")).toString().equalsIgnoreCase(document)) {
+				Recipe deletedRecipe = read(document);
+				docRef.delete();
+				return deletedRecipe;
+			}
 
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		throw new RuntimeException("Failed to delete, invalid id / recipe not found.");
 
-		return read(document); // temporary
-		// TODO Auto-generated method stub
 		
 	}
 
