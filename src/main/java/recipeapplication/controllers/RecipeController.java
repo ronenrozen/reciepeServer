@@ -1,16 +1,14 @@
 package recipeapplication.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import recipeapplication.boundries.RecipeTO;
 import recipeapplication.components.Recipe;
 import recipeapplication.services.RecipeService;
+
+import javax.validation.Valid;
 
 @RestController
 public class RecipeController {
@@ -37,5 +35,20 @@ public class RecipeController {
 		recipeEntity.setPreperation(recipe.getPreperation());
 
 		return recipeEntity;
+	}
+
+
+	@RequestMapping(value = "/recipe", method = RequestMethod.PUT)
+	public void recipePut(@RequestParam String id,
+						   @RequestPart(value = "recipeImage", required = false) MultipartFile file,
+						  @ModelAttribute("recipe") @Valid RecipeTO recipe ) {
+		if (id.equalsIgnoreCase(recipe.getId()))
+			this.recipes.updateRecipe(toEntity(recipe));
+		}
+
+	@RequestMapping(value = "/recipe/{id}", method = RequestMethod.GET)
+	public Recipe recipeGet(@PathVariable("id") String id)
+	{
+		return this.recipes.readRecipe(id);
 	}
 }

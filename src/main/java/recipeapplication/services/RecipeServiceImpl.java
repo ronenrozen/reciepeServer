@@ -1,16 +1,14 @@
 package recipeapplication.services;
 
-import java.io.IOException;
-
+import com.google.cloud.storage.Bucket;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.google.cloud.storage.Bucket;
-
 import recipeapplication.components.Recipe;
 import recipeapplication.database.RecipeFirebaseCrud;
+
+import java.io.IOException;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -41,6 +39,18 @@ public class RecipeServiceImpl implements RecipeService {
 			e.printStackTrace();
 		}
 
+	}
+
+	public Recipe readRecipe(String recipeId) {
+		if (Integer.parseInt(recipeId) > 0)
+			return this.recipes.read(recipeId);
+		else
+			throw new RuntimeException("Invalid id");
+	}
+
+	@Override
+	public void updateRecipe(Recipe recipe) {
+		this.recipes.update(recipe);
 	}
 
 }

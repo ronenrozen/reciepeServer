@@ -20,7 +20,6 @@ import java.util.Map;
 
 @Component
 public class UserFirebaseCrud implements FirebaseCrud<User> {
-
     private Firestore firestore;
     private String collection;
     private ObjectMapper mapper; // jackson's objectmapper
@@ -102,5 +101,4 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
         return StringUtils.isEmptyTrimmed(user.getId()) ||
                 StringUtils.isEmptyTrimmed(user.getName().getFirst()) || StringUtils.isEmptyTrimmed(user.getName().getLast());
     }
-
 }
