@@ -53,6 +53,19 @@ public class RecipeServiceImpl implements RecipeService {
 		return this.recipes.update(recipe);
 	}
 
+	public Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage) {
+		try {
+			if (recipeImage != null && !recipeImage.isEmpty()) {
+				String id = recipe.getId() + "." + FilenameUtils.getExtension(recipeImage.getOriginalFilename());
+				this.bucket.create(id, recipeImage.getBytes());
+				recipe.setRecipeImageId(id);
+			}
+			return this.updateRecipe(recipe);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} throw new RuntimeException("Failed to update recipe");
+	}
+
 	@Override
 	public Recipe deleteRecipe(String id) {
 		Recipe recipeForDeletion = this.recipes.delete(id);
