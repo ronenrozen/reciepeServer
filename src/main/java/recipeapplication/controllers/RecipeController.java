@@ -51,4 +51,7 @@ public class RecipeController {
 	{
 		return this.recipes.readRecipe(id);
 	}
+
+	@RequestMapping(value = "/recipe", method = RequestMethod.DELETE)
+	public Recipe recipeDelete(@RequestParam String id) { return this.recipes.deleteRecipe(id);}
 }
