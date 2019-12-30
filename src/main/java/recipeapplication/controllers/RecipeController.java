@@ -8,6 +8,8 @@ import recipeapplication.boundries.RecipeTO;
 import recipeapplication.components.Recipe;
 import recipeapplication.services.RecipeService;
 
+import javax.validation.Valid;
+
 @RestController
 public class RecipeController {
 	private RecipeService recipes;
@@ -18,7 +20,7 @@ public class RecipeController {
 		this.recipes = recipes;
 	}
 
-	@RequestMapping(value = "/postRecipe", method = RequestMethod.POST)
+	@RequestMapping(value = "/recipe", method = RequestMethod.POST)
 	public void addRecipe(
 			@RequestPart(value = "recipeImage", required = false) MultipartFile file,
 			@ModelAttribute("recipe") RecipeTO recipe) {
@@ -35,19 +37,17 @@ public class RecipeController {
 		return recipeEntity;
 	}
 
-	@RequestMapping(value = "/putRecipeById", method = RequestMethod.PUT)
+
+	@RequestMapping(value = "/recipe", method = RequestMethod.PUT)
 	public void recipePut(@RequestParam String id,
 						   @RequestPart(value = "recipeImage", required = false) MultipartFile file,
-						  @ModelAttribute("recipe") RecipeTO recipe) {
-		if (id.equalsIgnoreCase(recipe.getId()) &&
-				recipe.getCategory() != null &&
-				recipe.getIngridiant() != null &&
-				recipe.getPreperation() != null)
+						  @ModelAttribute("recipe") @Valid RecipeTO recipe ) {
+		if (id.equalsIgnoreCase(recipe.getId()))
 			this.recipes.updateRecipe(toEntity(recipe));
 		}
 
-	@RequestMapping(value = "/requestRecipeById", method = RequestMethod.GET)
-	public Recipe recipeGet(@RequestParam String id)
+	@RequestMapping(value = "/recipe/{id}", method = RequestMethod.GET)
+	public Recipe recipeGet(@PathVariable("id") String id)
 	{
 		return this.recipes.readRecipe(id);
 	}
