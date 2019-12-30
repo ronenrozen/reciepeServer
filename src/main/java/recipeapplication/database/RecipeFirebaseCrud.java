@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import org.springframework.web.multipart.MultipartFile;
 import recipeapplication.components.Recipe;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -27,18 +29,14 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	@Override
 	public void create(Recipe data) {
 		System.out.println("In recipe creation section");
-
+		DocumentReference docRef = this.firestore.collection(collection).document(data.getId());
 		try {
-			if (this.firestore.collection(collection).document(data.getId()).get().get().exists() == false)  // Check if document already exists, to not allow overwriting it with create.
-				this.firestore.collection(collection).document(data.getId()).set(data);
+			if (!docRef.get().get().exists())  // Check if document already exists, to not allow overwriting it with create.
+				docRef.set(data);
 			else
-				throw new Exception("Failed to create, Recipe with this ID already exists!");
-		} catch (InterruptedException e) {
+				throw new RuntimeException("Failed to create, Recipe with this ID already exists!");
+		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}
 	}
 
@@ -47,29 +45,21 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 		System.out.println("In recipe reading section");
 		try {
 			DocumentSnapshot docSnap = this.firestore.collection(collection).document(document).get().get();
-			if (docSnap.exists() == false)
-				throw new Exception("Failed to read, recipe doesn't exist!");
+			if (!docSnap.exists())
+				throw new RuntimeException("Failed to read, recipe doesn't exist!");
 			else {
-				Map<String, Object> data = this.firestore.collection(collection).document(document).get().get().getData();
+				Map<String, Object> data = docSnap.getData();
 
-				Recipe recipe = new Recipe();
-				recipe.setId(data.get("id").toString());
-				recipe.setCategory(data.get("category").toString());
-				recipe.setIngridiant(((List<String>) data.get("ingridiant")));
-				recipe.setPreperation(data.get("preperation").toString());
-				if (data.get("recipeImageId") != null)
-					recipe.setRecipeImageId(data.get("recipeImageId").toString());
-				return recipe;
+				return new Recipe(
+						data.get("id").toString(),
+						data.get("category").toString(),
+						((List<String>) data.get("ingridiant")),
+						data.get("preperation").toString(),
+						data.get("recipeImageId") != null ? data.get("recipeImageId").toString() : null);
 			}
-		} catch (InterruptedException e) {
+		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
-			return null;
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
+			throw new RuntimeException(e.getMessage());
 		}
 
 	}
@@ -77,20 +67,17 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 	@Override
 	public void update(Recipe data) {
 		System.out.println("In recipe updating section");
-
+		DocumentReference docRef = this.firestore.collection(collection).document(data.getId());
 		try {
-			DocumentSnapshot docSnap = this.firestore.collection(collection).document(data.getId()).get().get();
+			DocumentSnapshot docSnap = docRef.get().get();
+
 			if(docSnap.exists() && docSnap.get("id").toString().equalsIgnoreCase(data.getId())) {
-				this.firestore.collection(collection).document(data.getId()).set(data);
+				docRef.set(data);
 			}
 			else
-				throw new Exception("Failed to update, recipe doesn't exist!");
-		} catch (InterruptedException e) {
+				throw new RuntimeException("Failed to update, invalid id / recipe not found.");
+		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
 		}
 
 	}
