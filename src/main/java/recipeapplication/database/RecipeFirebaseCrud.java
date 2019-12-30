@@ -79,14 +79,11 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
-	public void delete(String document) {
+	public Recipe delete(String document) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
-
-
 }
