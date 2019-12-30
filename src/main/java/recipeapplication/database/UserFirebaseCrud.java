@@ -1,32 +1,29 @@
 package recipeapplication.database;
 
 import Utils.FinalsStringsExceptions;
+import Utils.FirebaseUtils;
 import Utils.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.firestore.Firestore;
 
-import org.springframework.web.server.ResponseStatusException;
-import recipeapplication.Exceptions.BadRequestException;
-import recipeapplication.Exceptions.UserNotFoundException;
+import recipeapplication.exceptions.BadRequestException;
+import recipeapplication.exceptions.UserNotFoundException;
 import recipeapplication.components.User;
 
-import java.util.Map;
 
 @Component
 public class UserFirebaseCrud implements FirebaseCrud<User> {
     private Firestore firestore;
     private String collection;
-    private ObjectMapper mapper; // jackson's objectmapper
+    private ObjectMapper mapper;
 
     @Autowired
-    UserFirebaseCrud(Firestore firestore,
-                     @Value("${recipeapp.firestore.collection.users:users}") String collection) {
+    UserFirebaseCrud(Firestore firestore, @Value("${recipeapp.firestore.collection.users:users}") String collection) {
         this.firestore = firestore;
         this.collection = collection;
         this.mapper = new ObjectMapper();
@@ -34,17 +31,17 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 
     @Override
     public User create(User user) {
-        if (!isAllUserDetailsValid(user)) {
-            this.firestore.collection(collection).document(user.getId()).set(user);
-        } else {
+        if (isAllUserDetailsNotValid(user)) {
             throw new BadRequestException(FinalsStringsExceptions.CREATE_BAD_REQUEST);
         }
+        DocumentReference docRef = this.getDocRef(user.getId());
+        FirebaseUtils.checkIfExists(docRef, collection);
+        docRef.set(user);
         return user;
     }
 
     @Override
     public User update(User user) {
-
         if (user.getFavoriteRecipes() == null) {
             throw new BadRequestException(FinalsStringsExceptions.UPDATE_BAD_REQUEST);
         }
@@ -52,53 +49,41 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
         User userFromDb = read(user.getId());
         if (userFromDb == null) {
             throw new UserNotFoundException(FinalsStringsExceptions.NO_USER_FOUND);
-        } else {
-            //TODO - EDIT JUST the array properties and not replace the current array
-            user.setRole(userFromDb.getRole());
-            user.setName(userFromDb.getName());
-            this.firestore.collection(collection).document(user.getId()).set(user, SetOptions.merge());
         }
+
+        user.setRole(userFromDb.getRole());
+        user.setName(userFromDb.getName());
+        this.firestore.collection(collection).document(user.getId()).set(user, SetOptions.merge());
+
         return user;
     }
 
     @Override
     public User delete(String document) {
-        /*Fb delete does not return an object, just details about the deletion time so we have to read the object in order to return it back*/
+        DocumentReference docRef = this.getDocRef(document);
+        FirebaseUtils.checkIfNotExists(docRef, collection);
         User user = read(document);
-        if (user == null) {
-            throw new UserNotFoundException(FinalsStringsExceptions.NO_USER_FOUND);
-        }
-        this.firestore.collection(collection).document(document).delete();
+        docRef.delete();
         return user;
     }
 
     @Override
     public User read(String document) {
-
-        if (!StringUtils.isEmptyTrimmed(document)) {
-            DocumentReference userRef = this.firestore.collection(collection).document(document);
-            User userPojo = null;
-            DocumentSnapshot userSnapshot;
-            try {
-                userSnapshot = userRef.get().get();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-            Map<String, Object> userMap = userSnapshot.getData();
-            if (userMap != null) {
-                /*Use jackson in order to convert the map to an user instance*/
-                userPojo = mapper.convertValue(userMap, User.class);
-            } else {
-                throw new UserNotFoundException(FinalsStringsExceptions.NO_USER_FOUND);
-            }
-            return userPojo;
-        } else {
+        if (StringUtils.isEmptyTrimmed(document)) {
             throw new BadRequestException(FinalsStringsExceptions.READ_BAD_REQUEST);
         }
+        DocumentReference docRef = this.getDocRef(document);
+        FirebaseUtils.checkIfNotExists(docRef, collection);
+        return mapper.convertValue(FirebaseUtils.getSnapshot(docRef).getData(), User.class);
     }
 
-    private boolean isAllUserDetailsValid(User user) {
+    private boolean isAllUserDetailsNotValid(User user) {
         return StringUtils.isEmptyTrimmed(user.getId()) ||
-                StringUtils.isEmptyTrimmed(user.getName().getFirst()) || StringUtils.isEmptyTrimmed(user.getName().getLast());
+                StringUtils.isEmptyTrimmed(user.getName().getFirst()) ||
+                StringUtils.isEmptyTrimmed(user.getName().getLast());
+    }
+
+    private DocumentReference getDocRef(String id) {
+        return this.firestore.collection(collection).document(id);
     }
 }

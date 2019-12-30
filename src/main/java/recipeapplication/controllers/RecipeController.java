@@ -1,57 +1,70 @@
 package recipeapplication.controllers;
 
+import Utils.FinalsStringsExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import recipeapplication.boundries.RecipeTO;
+import recipeapplication.boundaries.RecipeTO;
 import recipeapplication.components.Recipe;
+import recipeapplication.exceptions.BadRequestException;
 import recipeapplication.services.RecipeService;
 
 import javax.validation.Valid;
 
 @RestController
 public class RecipeController {
-	private RecipeService recipes;
+    private RecipeService recipes;
 
-	@Autowired
-	public RecipeController(RecipeService recipes) {
-		super();
-		this.recipes = recipes;
-	}
+    @Autowired
+    public RecipeController(RecipeService recipes) {
+        super();
+        this.recipes = recipes;
+    }
 
-	@RequestMapping(value = "/recipe", method = RequestMethod.POST)
-	public void addRecipe(
-			@RequestPart(value = "recipeImage", required = false) MultipartFile file,
-			@ModelAttribute("recipe") RecipeTO recipe) {
-		this.recipes.addRecipe(toEntity(recipe), file);
-	}
+    @PostMapping(
+            value = "/recipe",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe addRecipe(
+            @RequestPart(value = "recipeImage", required = false) MultipartFile file,
+            @ModelAttribute("recipe") @Valid RecipeTO recipe) {
+        return this.recipes.addRecipe(toEntity(recipe), file);
+    }
 
-	private Recipe toEntity(RecipeTO recipe) {
-		Recipe recipeEntity = new Recipe();
-		recipeEntity.setCategory(recipe.getCategory());
-		recipeEntity.setId(recipe.getId());
-		recipeEntity.setIngridiant(recipe.getIngridiant());
-		recipeEntity.setPreperation(recipe.getPreperation());
+    @PutMapping(
+            path = "/recipe/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe recipePut(
+            @PathVariable("id") String id,
+            @RequestPart(value = "recipeImage", required = false) MultipartFile file,
+            @ModelAttribute("recipe") @Valid RecipeTO recipe) {
+        if (!id.equalsIgnoreCase(recipe.getId()))
+            throw new BadRequestException(FinalsStringsExceptions.ID_NOT_EQUAL);
+        return this.recipes.updateRecipe(toEntity(recipe), file);
+    }
 
-		return recipeEntity;
-	}
+    @GetMapping(
+            path = "/recipe/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe recipeGet(@PathVariable("id") String id) {
+        return this.recipes.readRecipe(id);
+    }
 
+    @DeleteMapping(
+            value = "/recipe/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe recipeDelete(@PathVariable("id") String id) {
+        return this.recipes.deleteRecipe(id);
+    }
 
-	@RequestMapping(value = "/recipe", method = RequestMethod.PUT)
-	public void recipePut(@RequestParam String id,
-						   @RequestPart(value = "recipeImage", required = false) MultipartFile file,
-						  @ModelAttribute("recipe") @Valid RecipeTO recipe ) {
-		if (id.equalsIgnoreCase(recipe.getId()))
-			this.recipes.updateRecipe(toEntity(recipe));
-		}
+    private Recipe toEntity(RecipeTO recipe) {
+        Recipe recipeEntity = new Recipe();
+        recipeEntity.setCategory(recipe.getCategory());
+        recipeEntity.setId(recipe.getId());
+        recipeEntity.setIngredients(recipe.getIngredients());
+        recipeEntity.setPreparation(recipe.getPreparation());
 
-	@RequestMapping(value = "/recipe/{id}", method = RequestMethod.GET)
-	public Recipe recipeGet(@PathVariable("id") String id)
-	{
-		return this.recipes.readRecipe(id);
-	}
-
-	@RequestMapping(value = "/recipe", method = RequestMethod.DELETE)
-	public Recipe recipeDelete(@RequestParam String id) { return this.recipes.deleteRecipe(id);}
+        return recipeEntity;
+    }
 }

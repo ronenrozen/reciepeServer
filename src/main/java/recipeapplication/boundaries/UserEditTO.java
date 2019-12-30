@@ -1,4 +1,4 @@
-package recipeapplication.boundries;
+package recipeapplication.boundaries;
 
 
 import javax.validation.constraints.NotNull;

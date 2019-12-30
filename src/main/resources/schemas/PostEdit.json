@@ -1,19 +1,19 @@
 {
-    "type": "object",
-    "properties": {
-        "ingridiance": {
-            "type": "array",
-            "items": {
-                "type": "string"
+    "type":"object",
+    "properties":{
+        "ingredients":{
+            "type":"array",
+            "items":{
+                "type":"string"
             }
         },
-        "preperation": "string",
-        "recipeImage": {
-            "type": "formData",
-            "mimeType": {
-                "oneOf": [
-                    "image/png",
-                    "image/jpg"
+        "preparation":"string",
+        "recipeImage":{
+            "type":"formData",
+            "mimeType":{
+                "oneOf":[
+                    "image\/png",
+                    "image\/jpg"
                 ]
             }
         }

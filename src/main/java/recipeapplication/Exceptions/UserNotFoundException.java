@@ -1,4 +1,4 @@
-package recipeapplication.Exceptions;
+package recipeapplication.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 
