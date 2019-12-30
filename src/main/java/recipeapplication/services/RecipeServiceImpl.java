@@ -45,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
 		if (Integer.parseInt(recipeId) > 0)
 			return this.recipes.read(recipeId);
 		else
-			return null;
+			throw new RuntimeException("Invalid id");
 	}
 
 	@Override
