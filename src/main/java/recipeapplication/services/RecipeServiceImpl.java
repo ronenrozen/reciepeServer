@@ -49,8 +49,16 @@ public class RecipeServiceImpl implements RecipeService {
 	}
 
 	@Override
-	public void updateRecipe(Recipe recipe) {
-		this.recipes.update(recipe);
+	public Recipe updateRecipe(Recipe recipe) {
+		return this.recipes.update(recipe);
 	}
 
+	@Override
+	public Recipe deleteRecipe(String id) {
+		Recipe recipeForDeletion = this.recipes.delete(id);
+		if (recipeForDeletion.getRecipeImageId() != null)
+			this.bucket.get(recipeForDeletion.getRecipeImageId()).delete();
+		return recipeForDeletion;
+
+	}
 }
