@@ -26,11 +26,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     public Recipe addRecipe(Recipe recipe, MultipartFile recipeImage) {
-        Recipe retRecipe = this.addRecipe(recipe);
         if (recipeImage != null && !recipeImage.isEmpty()) {
             saveImageToStorage(recipe, recipeImage);
         }
-        return retRecipe;
+        return this.addRecipe(recipe);
     }
 
     public Recipe readRecipe(String recipeId) {
@@ -59,6 +58,13 @@ public class RecipeServiceImpl implements RecipeService {
             this.bucket.create(id, recipeImage.getBytes());
             recipe.setRecipeImageId(id);
         } catch (Exception e) {
+            try {
+              // Rollback, leave no trace
+              this.bucket.get(id).delete();
+              recipe.setRecipeImageId(null);
+            } catch (Exception ex) {
+              throw new RuntimeException("Exception in saveImageToStorage catch: " + ex.getMessage());
+            }
             throw new RuntimeException(e);
         }
     }
