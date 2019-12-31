@@ -53,8 +53,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void saveImageToStorage(Recipe recipe, MultipartFile recipeImage) {
+        String id = this.getRecipeImageFileName(recipe, recipeImage);
         try {
-            String id = this.getRecipeImageFileName(recipe, recipeImage);
             this.bucket.create(id, recipeImage.getBytes());
             recipe.setRecipeImageId(id);
         } catch (Exception e) {
