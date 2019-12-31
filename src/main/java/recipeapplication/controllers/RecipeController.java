@@ -43,7 +43,7 @@ public class RecipeController {
 						   @RequestPart(value = "recipeImage", required = false) MultipartFile file,
 						  @ModelAttribute("recipe") @Valid RecipeTO recipe ) {
 		if (id.equalsIgnoreCase(recipe.getId()))
-			this.recipes.updateRecipe(toEntity(recipe));
+			this.recipes.updateRecipe(toEntity(recipe), file);
 		}
 
 	@RequestMapping(value = "/recipe/{id}", method = RequestMethod.GET)

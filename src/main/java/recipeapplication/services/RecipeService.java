@@ -12,5 +12,9 @@ public interface RecipeService {
 	
 	public Recipe readRecipe(String id);
 
-	public void updateRecipe(Recipe recipe);
+	public Recipe updateRecipe(Recipe recipe);
+
+	public Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage);
+
+	public Recipe deleteRecipe(String id);
 }
