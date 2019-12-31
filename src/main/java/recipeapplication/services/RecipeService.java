@@ -5,16 +5,14 @@ import org.springframework.web.multipart.MultipartFile;
 import recipeapplication.components.Recipe;
 
 public interface RecipeService {
-	
-	public void addRecipe(Recipe recipe);
-	
-	public void addRecipe(Recipe recipe, MultipartFile recipeImage);
-	
-	public Recipe readRecipe(String id);
 
-	public Recipe updateRecipe(Recipe recipe);
+    Recipe addRecipe(Recipe recipe);
 
-	public Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage);
+    Recipe addRecipe(Recipe recipe, MultipartFile recipeImage);
 
-	public Recipe deleteRecipe(String id);
+    Recipe readRecipe(String id);
+
+    Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage);
+
+    Recipe deleteRecipe(String id);
 }

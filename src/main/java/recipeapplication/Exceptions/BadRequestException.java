@@ -1,7 +1,4 @@
-package recipeapplication.Exceptions;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package recipeapplication.exceptions;
 
 public class BadRequestException extends RuntimeException {
 

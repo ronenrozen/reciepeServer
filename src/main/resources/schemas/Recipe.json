@@ -1,27 +1,27 @@
 {
-    "type": "object",
-    "required": [
+    "type":"object",
+    "required":[
         "id",
         "category",
-        "ingridiance",
-        "preperation"
+        "ingredients",
+        "preparation"
     ],
-    "properties": {
-        "id": "string",
-        "category": "string",
-        "ingridiance": {
-            "type": "array",
-            "items": {
-                "type": "string"
+    "properties":{
+        "id":"string",
+        "category":"string",
+        "ingredients":{
+            "type":"array",
+            "items":{
+                "type":"string"
             }
         },
-        "preperation": "string",
-        "recipeImage": {
-            "type": "formData",
-            "mimeType": {
-                "oneOf": [
-                    "image/png",
-                    "image/jpg"
+        "preparation":"string",
+        "recipeImage":{
+            "type":"formData",
+            "mimeType":{
+                "oneOf":[
+                    "image\/png",
+                    "image\/jpg"
                 ]
             }
         }

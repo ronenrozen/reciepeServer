@@ -1,8 +1,6 @@
 package recipeapplication.controllers;
 
-import recipeapplication.Exceptions.BadRequestException;
-import recipeapplication.Exceptions.UserNotFoundException;
-import recipeapplication.boundries.UserEditTO;
+import recipeapplication.boundaries.UserEditTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -25,55 +23,33 @@ public class UserController {
         this.users = users;
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public void test() {
-        User a = new User();
-        a.setId("1");
-        a.setName(new Name("Sagiv", "Asraf"));
-        a.setRole(Role.ADMIN);
-
-        User b = new User();
-        b.setId("2");
-        b.setName(new Name("Ruby", "Kozel"));
-        b.setRole(Role.ADMIN);
-
-        User c = new User();
-        c.setId("3");
-        c.setName(new Name("Shimon", "Banana"));
-        c.setRole(Role.USER);
-
-        users.addUser(a);
-        users.addUser(b);
-        users.addUser(c);
-    }
-
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET,
+    @GetMapping(
+            value = "/user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public User readUser(@PathVariable @Valid String id) {
         return this.users.readUser(id);
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            value = "/user",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public User addUser(@RequestBody @Valid User user) {
         return this.users.addUser(user);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE,
+    @DeleteMapping(
+            value = "/user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public User deleteUser(@PathVariable @Valid String id) {
         return this.users.deleteUser(id);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT,
-            consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(
+            value = "/user/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public User updateUser(@PathVariable String id, @RequestBody UserEditTO user) {
-        User convertedUser = UserTOtoUserEntity(user, id);
-        return this.users.updateUser(convertedUser);
+        return this.users.updateUser(new User(user.getFavoriteRecipes(), id));
     }
-
-    private User UserTOtoUserEntity(UserEditTO user, String id) {
-        return new User(user.getFavoriteRecipes(), id);
-    }
-
 }
