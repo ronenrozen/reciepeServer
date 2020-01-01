@@ -15,6 +15,7 @@ import recipeapplication.exceptions.BadRequestException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Component
 public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
@@ -65,26 +66,30 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
         return deletedRecipe;
     }
 
-    public Recipe[] queryCategory(String category) {
+    public Recipe[] searchRecipe(String category, String[] ingredients) {
         CollectionReference recipes = firestore.collection(collection);
-        Query query = recipes.whereEqualTo("category", category.toUpperCase());
-
-        return getRecipeArrayFromQuery(query).toArray(new Recipe[0]);
-
+        Query query;
+        if (category != null && ingredients != null) {
+            query = recipes.whereEqualTo("category", category.toUpperCase()).whereArrayContainsAny("ingredients", Arrays.asList(ingredients));
+            return recipeQueryFilterByIngredients(ingredients, query);
+        }
+        else if (category != null) {
+            query = recipes.whereEqualTo("category", category);
+            return getRecipeArrayFromQuery(query).toArray(new Recipe[0]);
+        }
+        else if (ingredients != null) {
+            query = recipes.whereArrayContainsAny("ingredients", Arrays.asList(ingredients));
+            return recipeQueryFilterByIngredients(ingredients, query);
+        }
+        else
+            return null;
     }
 
-    public Recipe[] queryIngredients(String[] ingredients) {
-        CollectionReference recipes = firestore.collection(collection);
-        Query query = recipes.whereArrayContainsAny("ingredients", Arrays.asList(ingredients));
-
-        ArrayList<Recipe> recipeArrayBeforeFilter = getRecipeArrayFromQuery(query);
-        ArrayList<Recipe> recipeArrayAfterFilter = new ArrayList<>();
-        for (Recipe recipe : recipeArrayBeforeFilter) {
-            if(StringUtils.isFullyContainedInArray(recipe.getIngredients(), Arrays.asList(ingredients))) {
-                recipeArrayAfterFilter.add(recipe);
-            }
-        }
-        return recipeArrayAfterFilter.toArray(new Recipe[0]);
+    private Recipe[] recipeQueryFilterByIngredients(String[] ingredients, Query query) {
+        return getRecipeArrayFromQuery(query).stream()
+                .filter(recipe -> StringUtils.listToUpperCase(Arrays.asList(ingredients))
+                        .containsAll(StringUtils.listToUpperCase(recipe.getIngredients())))
+                .collect(Collectors.toList()).toArray(new Recipe[0]);
     }
 
     private ArrayList<Recipe> getRecipeArrayFromQuery(Query query) {

@@ -38,13 +38,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe[] search(String category) {
-        return recipes.queryCategory(category);
-    }
-
-    @Override
-    public Recipe[] search(String[] ingredients) {
-        return recipes.queryIngredients(ingredients);
+    public Recipe[] searchRecipe(String category, String[] ingredients) {
+        return recipes.searchRecipe(category, ingredients);
     }
 
     @Override

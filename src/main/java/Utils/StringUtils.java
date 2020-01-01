@@ -1,6 +1,7 @@
 package Utils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class StringUtils {
 
@@ -8,18 +9,9 @@ public class StringUtils {
         return (str.trim().isEmpty());
     }
 
-    public static boolean isFullyContainedInArray(List<String> containedArray, List<String> containingArray) {
-        if (containedArray.size() > containingArray.size()) {
-            return false;
-        }
-        else {
-            for (int i = 0; i < containedArray.size(); ++i) {
-                if (!containingArray.contains(containedArray.get(i).toUpperCase()))
-                    return false;
-            }
-            return true;
-        }
-    }
+
+    public static List<String> listToUpperCase(List<String> lst) {
+        return lst.stream().map(String::toUpperCase).collect(Collectors.toList()); }
 
 
 }

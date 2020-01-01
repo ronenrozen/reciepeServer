@@ -12,9 +12,7 @@ public interface RecipeService {
 
     Recipe readRecipe(String id);
 
-    Recipe[] search(String category);
-
-    Recipe[] search(String[] ingredients);
+    Recipe[] searchRecipe(String category, String[] ingredients);
 
     Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage);
 

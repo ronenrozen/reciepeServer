@@ -59,17 +59,10 @@ public class RecipeController {
     }
 
     @GetMapping(
-            path = "/recipeSearch/{category}",
+            path = "/recipeSearch",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Recipe[] recipeSearch(@RequestParam(name = "category", required = false ) String category) {
-        return this.recipes.search(category);
-    }
-
-    @GetMapping(
-            path = "/recipeSearch/{ingredients}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Recipe[] recipeSearch(@RequestParam(name = "ingredients", required = false) String[] ingredients) {
-        return this.recipes.search(ingredients);
+    public Recipe[] recipeSearch(@RequestParam(name = "byCategory", required = false) String category, @RequestParam(name = "byIngredients", required = false) String [] ingredients) {
+        return this.recipes.searchRecipe(category, ingredients);
     }
 
 
