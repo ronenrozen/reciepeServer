@@ -62,7 +62,6 @@ public class RecipeController {
             path = "/recipeSearch/{category}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Recipe[] recipeSearch(@RequestParam(name = "category", required = false ) String category) {
-        System.out.println("Search by Category");
         return this.recipes.search(category);
     }
 
@@ -70,9 +69,6 @@ public class RecipeController {
             path = "/recipeSearch/{ingredients}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Recipe[] recipeSearch(@RequestParam(name = "ingredients", required = false) String[] ingredients) {
-        System.out.println("Search by Ingredients: ");
-        for (String s : ingredients)
-            System.out.print(s + " ");
         return this.recipes.search(ingredients);
     }
 

@@ -66,7 +66,6 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
     }
 
     public Recipe[] queryCategory(String category) {
-        System.out.println("In queryCategory crud");
         CollectionReference recipes = firestore.collection(collection);
         Query query = recipes.whereEqualTo("category", category.toUpperCase());
 
@@ -75,22 +74,22 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
     }
 
     public Recipe[] queryIngredients(String[] ingredients) {
-        System.out.println("In queryIngredients crud");
         CollectionReference recipes = firestore.collection(collection);
         Query query = recipes.whereArrayContainsAny("ingredients", Arrays.asList(ingredients));
 
-        ArrayList<Recipe> recipeArrayList = getRecipeArrayFromQuery(query);
-        for (Recipe recipe : recipeArrayList) {
-            if(!StringUtils.isFullyContainedInArray(recipe.getIngredients(), Arrays.asList(ingredients))) {
-                recipeArrayList.remove(recipe);
+        ArrayList<Recipe> recipeArrayBeforeFilter = getRecipeArrayFromQuery(query);
+        ArrayList<Recipe> recipeArrayAfterFilter = new ArrayList<>();
+        for (Recipe recipe : recipeArrayBeforeFilter) {
+            if(StringUtils.isFullyContainedInArray(recipe.getIngredients(), Arrays.asList(ingredients))) {
+                recipeArrayAfterFilter.add(recipe);
             }
         }
-        return recipeArrayList.toArray(new Recipe[0]);
+        return recipeArrayAfterFilter.toArray(new Recipe[0]);
     }
 
     private ArrayList<Recipe> getRecipeArrayFromQuery(Query query) {
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
-        ArrayList<Recipe> recipeArrayList = new ArrayList<Recipe>();
+        ArrayList<Recipe> recipeArrayList = new ArrayList<>();
         for (DocumentSnapshot document : FirebaseUtils.getQuerySnapshot(querySnapshot).getDocuments()) {
             recipeArrayList.add(mapper.convertValue(document.getData(), Recipe.class));
         }

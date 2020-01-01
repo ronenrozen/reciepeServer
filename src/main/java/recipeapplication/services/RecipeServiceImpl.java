@@ -39,13 +39,11 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe[] search(String category) {
-        System.out.println("In Recipe Service impl (category");
         return recipes.queryCategory(category);
     }
 
     @Override
     public Recipe[] search(String[] ingredients) {
-        System.out.println("\nIn Recipe service impl (ingredients)");
         return recipes.queryIngredients(ingredients);
     }
 

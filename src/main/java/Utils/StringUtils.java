@@ -9,10 +9,7 @@ public class StringUtils {
     }
 
     public static boolean isFullyContainedInArray(List<String> containedArray, List<String> containingArray) {
-        System.out.println("Contained array: " + containedArray.toString());
-        System.out.println("Containing array: " + containingArray.toString());
         if (containedArray.size() > containingArray.size()) {
-            System.out.println("Contained array is larger than containing array.");
             return false;
         }
         else {
