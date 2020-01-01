@@ -1,7 +1,9 @@
 package Utils;
 
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import recipeapplication.exceptions.BadRequestException;
 import recipeapplication.exceptions.RecipeAlreadyExistsException;
 import recipeapplication.exceptions.RecipeNotFoundException;
@@ -34,5 +36,14 @@ public class FirebaseUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static QuerySnapshot getQuerySnapshot(ApiFuture<QuerySnapshot> apiQuerySnapshot) {
+        try {
+            return apiQuerySnapshot.get();
+        } catch (Exception e) {
+            throw new RuntimeException("Error in getting QuerySnapshot");
+        }
+
     }
 }

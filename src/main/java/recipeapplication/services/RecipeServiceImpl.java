@@ -32,8 +32,14 @@ public class RecipeServiceImpl implements RecipeService {
         return this.addRecipe(recipe);
     }
 
+    @Override
     public Recipe readRecipe(String recipeId) {
         return this.recipes.read(recipeId);
+    }
+
+    @Override
+    public Recipe[] searchRecipe(String category, String[] ingredients) {
+        return recipes.searchRecipe(category, ingredients);
     }
 
     @Override

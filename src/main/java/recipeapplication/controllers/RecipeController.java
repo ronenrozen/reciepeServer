@@ -58,6 +58,15 @@ public class RecipeController {
         return this.recipes.deleteRecipe(id);
     }
 
+    @GetMapping(
+            path = "/recipeSearch",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe[] recipeSearch(@RequestParam(name = "byCategory", required = false) String category, @RequestParam(name = "byIngredients", required = false) String [] ingredients) {
+        return this.recipes.searchRecipe(category, ingredients);
+    }
+
+
+
     private Recipe toEntity(RecipeTO recipe) {
         Recipe recipeEntity = new Recipe();
         recipeEntity.setCategory(recipe.getCategory());
