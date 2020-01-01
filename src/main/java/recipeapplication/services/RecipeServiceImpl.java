@@ -32,8 +32,21 @@ public class RecipeServiceImpl implements RecipeService {
         return this.addRecipe(recipe);
     }
 
+    @Override
     public Recipe readRecipe(String recipeId) {
         return this.recipes.read(recipeId);
+    }
+
+    @Override
+    public Recipe[] search(String category) {
+        System.out.println("In Recipe Service impl (category");
+        return recipes.queryCategory(category);
+    }
+
+    @Override
+    public Recipe[] search(String[] ingredients) {
+        System.out.println("\nIn Recipe service impl (ingredients)");
+        return recipes.queryIngredients(ingredients);
     }
 
     @Override

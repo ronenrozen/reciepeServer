@@ -12,6 +12,10 @@ public interface RecipeService {
 
     Recipe readRecipe(String id);
 
+    Recipe[] search(String category);
+
+    Recipe[] search(String[] ingredients);
+
     Recipe updateRecipe(Recipe recipe, MultipartFile recipeImage);
 
     Recipe deleteRecipe(String id);

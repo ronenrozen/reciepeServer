@@ -58,6 +58,26 @@ public class RecipeController {
         return this.recipes.deleteRecipe(id);
     }
 
+    @GetMapping(
+            path = "/recipeSearch/{category}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe[] recipeSearch(@RequestParam(name = "category", required = false ) String category) {
+        System.out.println("Search by Category");
+        return this.recipes.search(category);
+    }
+
+    @GetMapping(
+            path = "/recipeSearch/{ingredients}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public Recipe[] recipeSearch(@RequestParam(name = "ingredients", required = false) String[] ingredients) {
+        System.out.println("Search by Ingredients: ");
+        for (String s : ingredients)
+            System.out.print(s + " ");
+        return this.recipes.search(ingredients);
+    }
+
+
+
     private Recipe toEntity(RecipeTO recipe) {
         Recipe recipeEntity = new Recipe();
         recipeEntity.setCategory(recipe.getCategory());

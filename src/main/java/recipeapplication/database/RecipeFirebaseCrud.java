@@ -4,6 +4,7 @@ import Utils.FinalsStringsExceptions;
 import Utils.FirebaseUtils;
 import Utils.StringUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import recipeapplication.components.Recipe;
 import recipeapplication.exceptions.BadRequestException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Component
 public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
@@ -61,6 +65,37 @@ public class RecipeFirebaseCrud implements FirebaseCrud<Recipe> {
         return deletedRecipe;
     }
 
+    public Recipe[] queryCategory(String category) {
+        System.out.println("In queryCategory crud");
+        CollectionReference recipes = firestore.collection(collection);
+        Query query = recipes.whereEqualTo("category", category.toUpperCase());
+
+        return getRecipeArrayFromQuery(query).toArray(new Recipe[0]);
+
+    }
+
+    public Recipe[] queryIngredients(String[] ingredients) {
+        System.out.println("In queryIngredients crud");
+        CollectionReference recipes = firestore.collection(collection);
+        Query query = recipes.whereArrayContainsAny("ingredients", Arrays.asList(ingredients));
+
+        ArrayList<Recipe> recipeArrayList = getRecipeArrayFromQuery(query);
+        for (Recipe recipe : recipeArrayList) {
+            if(!StringUtils.isFullyContainedInArray(recipe.getIngredients(), Arrays.asList(ingredients))) {
+                recipeArrayList.remove(recipe);
+            }
+        }
+        return recipeArrayList.toArray(new Recipe[0]);
+    }
+
+    private ArrayList<Recipe> getRecipeArrayFromQuery(Query query) {
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        ArrayList<Recipe> recipeArrayList = new ArrayList<Recipe>();
+        for (DocumentSnapshot document : FirebaseUtils.getQuerySnapshot(querySnapshot).getDocuments()) {
+            recipeArrayList.add(mapper.convertValue(document.getData(), Recipe.class));
+        }
+        return recipeArrayList;
+    }
     private DocumentReference getDocRef(String id) {
         return this.firestore.collection(collection).document(id);
     }
