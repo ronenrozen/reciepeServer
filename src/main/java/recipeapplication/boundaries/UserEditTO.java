@@ -1,27 +1,33 @@
 package recipeapplication.boundaries;
 
-
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserEditTO {
 
-    @NotNull
-    ArrayList<String> favoriteRecipes;
+    List<String> favoriteRecipes;
+    List<String> recipes;
 
     public UserEditTO() {
 
     }
 
-    public UserEditTO(@NotNull ArrayList<String> favoriteRecipes) {
+    public UserEditTO(List<String> favoriteRecipes, List<String> recipes) {
         this.favoriteRecipes = favoriteRecipes;
     }
 
-    public ArrayList<String> getFavoriteRecipes() {
+    public List<String> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(List<String> recipes) {
+        this.recipes = recipes;
+    }
+
+    public List<String> getFavoriteRecipes() {
         return favoriteRecipes;
     }
 
-    public void setFavoriteRecipes(ArrayList<String> favoriteRecipes) {
+    public void setFavoriteRecipes(List<String> favoriteRecipes) {
         this.favoriteRecipes = favoriteRecipes;
     }
 

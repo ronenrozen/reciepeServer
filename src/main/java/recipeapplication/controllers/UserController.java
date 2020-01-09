@@ -50,6 +50,6 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public User updateUser(@PathVariable String id, @RequestBody UserEditTO user) {
-        return this.users.updateUser(new User(user.getFavoriteRecipes(), id));
+        return this.users.updateUser(new User(user.getFavoriteRecipes(), user.getRecipes(), id));
     }
 }

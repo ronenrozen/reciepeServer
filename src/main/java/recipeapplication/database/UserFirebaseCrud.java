@@ -42,7 +42,7 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 
     @Override
     public User update(User user) {
-        if (user.getFavoriteRecipes() == null) {
+        if (user.getFavoriteRecipes() == null && user.getRecipes() == null) {
             throw new BadRequestException(FinalsStringsExceptions.UPDATE_BAD_REQUEST);
         }
 
@@ -53,6 +53,15 @@ public class UserFirebaseCrud implements FirebaseCrud<User> {
 
         user.setRole(userFromDb.getRole());
         user.setName(userFromDb.getName());
+
+        if (user.getFavoriteRecipes() == null) {
+            user.setFavoriteRecipes(userFromDb.getFavoriteRecipes());
+        }
+
+        if (user.getRecipes() == null) {
+            user.setRecipes(userFromDb.getRecipes());
+        }
+
         this.firestore.collection(collection).document(user.getId()).set(user, SetOptions.merge());
 
         return user;
