@@ -1,19 +1,40 @@
 {
-    "type":"object",
-    "forbidden":[
-        "id",
-        "role",
-        "name"
-    ],
-    "required":[
+  "type": "object",
+  "forbidden": [
+    "id",
+    "role",
+    "name"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "favoriteRecipes",
+        "recipes"
+      ]
+    },
+    {
+      "required": [
+        "recipes"
+      ]
+    },
+    {
+      "required": [
         "favoriteRecipes"
-    ],
-    "properties":{
-        "favoriteRecipes":{
-            "type":"array",
-            "items":{
-                "type":"string"
-            }
-        }
+      ]
     }
+  ],
+  "properties": {
+    "recipes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "favoriteRecipes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
 }

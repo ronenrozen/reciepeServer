@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @IgnoreExtraProperties
 public class User {
@@ -18,22 +19,33 @@ public class User {
     @NotNull
     private Name name;
 
-    private ArrayList<String>  favoriteRecipes;
+    private List<String> recipes;
+
+    private List<String> favoriteRecipes;
 
     public User() {
     }
 
-	public User(@NotNull ArrayList<String> favoriteRecipes, @NotNull String id) {
-    	this.favoriteRecipes = favoriteRecipes;
-    	this.id = id;
-	}
+    public User(@NotNull List<String> favoriteRecipes, @NotNull List<String> recipes, @NotNull String id) {
+        this.favoriteRecipes = favoriteRecipes;
+        this.recipes = recipes;
+        this.id = id;
+    }
 
-    public User(@NotNull String id, @NotNull Role role, @NotNull Name name, ArrayList<String>  favoriteRecipes) {
+    public User(@NotNull String id, @NotNull Role role, @NotNull Name name) {
         super();
         this.id = id;
         this.role = role;
         this.name = name;
-        this.favoriteRecipes = favoriteRecipes;
+    }
+
+    public User(@NotNull String id, @NotNull Role role, @NotNull Name name, List<String> recipes, List<String> favoriteRecipes) {
+        super();
+        this.id = id;
+        this.role = role;
+        this.name = name;
+        this.recipes = recipes == null ? new ArrayList<>() : recipes;
+        this.favoriteRecipes = favoriteRecipes == null ? new ArrayList<>() : favoriteRecipes;
     }
 
 
@@ -61,12 +73,19 @@ public class User {
         this.name = name;
     }
 
+    public List<String> getRecipes() {
+        return recipes;
+    }
 
-    public ArrayList<String>  getFavoriteRecipes() {
+    public void setRecipes(List<String> recipes) {
+        this.recipes = recipes;
+    }
+
+    public List<String> getFavoriteRecipes() {
         return favoriteRecipes;
     }
 
-    public void setFavoriteRecipes(ArrayList<String>  favoriteRecipes) {
+    public void setFavoriteRecipes(List<String> favoriteRecipes) {
         this.favoriteRecipes = favoriteRecipes;
     }
 
