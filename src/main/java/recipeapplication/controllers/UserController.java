@@ -12,6 +12,7 @@ import recipeapplication.services.UserService;
 
 import javax.validation.Valid;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 public class UserController {
 

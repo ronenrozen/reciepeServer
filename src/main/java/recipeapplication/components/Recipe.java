@@ -21,7 +21,7 @@ public class Recipe {
 	@NotNull
 	String preparation;
 
-	String recipeImageId; // TODO: figure out how to store images
+	String recipeImageId;
 
 	public Recipe() {
 	}
