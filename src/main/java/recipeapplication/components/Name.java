@@ -29,4 +29,13 @@ public class Name {
 	public void setLast(String last) {
 		this.last = last;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if ((obj == null) || (obj.getClass() != this.getClass())) {
+			return false;
+		}
+		Name theName = (Name) obj;
+		return (this.first.equals(theName.getFirst()) && this.last.equals(theName.getLast()));
+	}
 }
